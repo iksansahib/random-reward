@@ -1,0 +1,40 @@
+nginx:
+  build: images/nginx
+  command: nginx -g "daemon off;"
+  links:
+    - php
+  ports:
+    - "199:80"
+php:
+  build: images/php
+  volumes:
+    - ./images/php:/var/www/html
+  working_dir: /var/www/html/app/public
+  command: php-fpm
+  links:
+    - db
+  ports:
+    - "29000:9000"
+  environment:
+    APP_ENV: local
+    APP_DEBUG: 'true'
+    APP_KEY: 12345678
+    APP_LOCALE: en
+    APP_FALLBACK_LOCALE: en
+    APP_TIMEZONE: Asia/Jakarta
+    DB_CONNECTION: mysql
+    DB_HOST: db
+    DB_DATABASE: iksantest
+    DB_USERNAME: iksantest
+    DB_PASSWORD: iksantest
+    DB_PORT: 3306
+db:
+  build: images/mysql
+  command: --default-authentication-plugin=mysql_native_password
+  ports:
+    - "23306:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: iksantest
+    MYSQL_DATABASE: iksantest
+    MYSQL_USER: iksantest
+    MYSQL_PASSWORD: iksantest
